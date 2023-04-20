@@ -1,0 +1,44 @@
+*{
+    box-sizing: border-box;
+}
+
+.section{
+  display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end; 
+    gap: 10px;
+    font-size: 18px;
+}
+  
+.header h1 {
+    display: block;
+    color: #52b788;
+}
+
+a {
+  display: inline-block;
+  text-decoration: underline;
+}
+
+.container {
+  margin: 0 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+  flex:1;
+  background-color: #bee9e8;
+  color: #4a4a4a;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 1.25rem;
+  margin: 10; 
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
+}
+
+.results {
+    border: 2px dashed;
+    border-radius: 6px;
+    padding: 1.25rem;
+    margin: 12px;
+}
