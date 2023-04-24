@@ -42,3 +42,8 @@ a {
     padding: 1.25rem;
     margin: 12px;
 }
+
+.chart{
+  height: 450px;
+  width: 800px;
+}

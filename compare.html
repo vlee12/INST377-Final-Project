@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GenEd Engine</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
   </head>
   <body>
     <div class="section">
@@ -14,6 +15,10 @@
       <a href="about.html" class="about">About</a>
     </div>
     <h1>Number of Gened Classes offered</h1>
-    <div id="dataviz">Data Visualization Here</div>
+    <div class="chart">
+      <canvas id="myChart"></canvas>
+    </div>
+    <!-- <div id="dataviz">Data Visualization Here</div> -->
+    <script src="visscript.js"></script>
   </body>
 </html>
