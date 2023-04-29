@@ -1,42 +1,92 @@
+
 function injectHTML(list){
     console.log('fired injectHTML');
-    const target = document.querySelector('#genedlist')
+    const target = document.querySelector('#building_list')
     target.innerHTML = '';
     list.forEach((item, index) => {
-        const str = `<li>${item.course_id} ${item.name} ${item.credits}</li>`
+        const str = `<li>${item.name}</li>`
         target.innerHTML += str
     })
   }
-
-
-  function filterList(list, values) {
-    const newList = []
+  
+  function filterList(list, query) {
     return list.filter((item) => {
-        values.forEach((value)=> {
-            if(item.gen_ed.includes(value)){
-                newList.push(item)
-            }
-        });
-        return newList
-    })}   
+      const lowerCaseName = item.name.toLowerCase();
+      const lowerCaseQuery = query.toLowerCase();
+      return lowerCaseName.includes(lowerCaseQuery);
+    })
+  }
 
-async function mainEvent() {
+  function initMap(){
+    const carto = L.map('map').setView([38.99, -76.945], 14.4);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(carto);
+    return carto;
+  }
 
+  function markerPlace(array, map){
+    console.log('array for markers', array);
+    
+    map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          layer.remove();
+        }
+      });
+    
+    array.forEach((item) => {
+        console.log('markerPlace', item);
+
+        const mark = L.marker([parseFloat(item.lat), parseFloat(item.long)])
+        mark.bindPopup(JSON.stringify(item.name)).openPopup();
+        mark.addTo(map);
+
+      });
+    }
+  
+  async function mainEvent() { 
     const mainForm = document.querySelector('.main_form');
-    const loadDataButton = document.querySelector('#search');
+    
+    const textField = document.querySelector('#build');
+    const filterDataButton = document.querySelector('#filter')
+  
+  
+    const carto = initMap();
 
-    let values = [];
+    const storedData = localStorage.getItem('storedData');
+    let parsedData = JSON.parse(storedData);
 
-    loadDataButton.addEventListener('click', async (submitEvent) => {
-        console.log('Loading Data');
-        const results = await fetch('https://api.umd.io/v1/courses');
-        const storedList = await results.json();
-        let checkboxes = document.querySelectorAll('input[name="type"]:checked');
-        checkboxes.forEach((checkbox) => {
-            values.push(checkbox.value.toUpperCase())
-        });
-        injectHTML(storedList)
-    });
-}    
+    let currentList = []; 
 
-document.addEventListener('DOMContentLoaded', async () => mainEvent());
+    const results = await fetch('https://api.umd.io/v1/map/buildings');
+
+    const storedList = await results.json();
+    localStorage.setItem('storedData', JSON.stringify(storedList));
+    parsedData = storedList;
+  
+    filterDataButton.addEventListener('click', (event) => {
+      console.log('clicked FilterButton');
+  
+      const formData = new FormData(mainForm);
+      const formProps = Object.fromEntries(formData);
+  
+      console.log(formProps)
+      const newList = filterList(storedList, formProps.build);
+  
+      console.log(newList);
+      injectHTML(newList);
+      markerPlace(newList, carto);
+    })
+
+    textField.addEventListener('input',(event) => {
+        console.log('input', event.target.value);
+        const newList = filterList(currentList, event.target.value);
+        console.log(newList);
+        injectHTML(newList);
+        markerPlace(newList, carto);
+    })
+  }
+  
+
+  document.addEventListener('DOMContentLoaded', async () => mainEvent()); 
