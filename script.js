@@ -50,7 +50,7 @@ function injectHTML(list){
     
     const textField = document.querySelector('#build');
     const filterDataButton = document.querySelector('#filter')
-  
+    const radio = document.querySelector('input[type=radio]')
   
     const carto = initMap();
 
@@ -58,6 +58,7 @@ function injectHTML(list){
     let parsedData = JSON.parse(storedData);
 
     let currentList = []; 
+    let values = [];
 
     const results = await fetch('https://api.umd.io/v1/map/buildings');
 
@@ -67,7 +68,11 @@ function injectHTML(list){
   
     filterDataButton.addEventListener('click', (event) => {
       console.log('clicked FilterButton');
-  
+      
+      const checkboxes = document.querySelectorAll('input[name="type"]:checked');
+      checkboxes.forEach((radio) => {
+        values.push(radio.value)});
+
       const formData = new FormData(mainForm);
       const formProps = Object.fromEntries(formData);
   
@@ -77,14 +82,22 @@ function injectHTML(list){
       console.log(newList);
       injectHTML(newList);
       markerPlace(newList, carto);
-    })
 
-    textField.addEventListener('input',(event) => {
-        console.log('input', event.target.value);
-        const newList = filterList(currentList, event.target.value);
+      if (values.length > 0){
+        console.log(values)
+        const newList = filterList(storedList, formProps.type);
         console.log(newList);
         injectHTML(newList);
         markerPlace(newList, carto);
+        values.length = 0;
+        console.log(values);
+      }
+      else{
+        const newList = filterList(storedList, formProps.build);
+        console.log(newList);
+        injectHTML(newList);
+        markerPlace(newList, carto);
+      }
     })
   }
   
