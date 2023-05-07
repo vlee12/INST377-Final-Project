@@ -17,6 +17,13 @@ html {
   text-size-adjust: 100%;
 }
 
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -29,7 +36,7 @@ body {
 
 
 a {
-  display: inline-block;
+  display: flex;
   text-decoration: underline;
 }
 
