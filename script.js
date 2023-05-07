@@ -81,7 +81,7 @@ function injectHTML(list){
     localStorage.setItem('storedData', JSON.stringify(storedList));
     parsedData = storedList;
   
-    currentList = cutRestaurantList(storedList)
+    currentList = cutBuildingList(storedList)
 
     filterDataButton.addEventListener('click', (event) => {
       console.log('clicked FilterButton');
@@ -106,7 +106,7 @@ function injectHTML(list){
         buttons.checked = false;
       }
       else{
-        currentList = cutRestaurantList(storedList)
+        currentList = cutBuildingList(storedList)
         injectHTML(currentList);
         markerPlace(currentList, carto);
       }
