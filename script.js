@@ -1,4 +1,19 @@
 
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); 
+}
+  
+function cutBuildingList(list) {
+  console.log('fired cut list');
+  const range = [...Array(15).keys()];
+  return newArray = range.map((item) => {
+      const index = getRandomIntInclusive(0, list.length - 1);
+      return list[index]
+  })
+}
+
 function injectHTML(list){
     console.log('fired injectHTML');
     const target = document.querySelector('#building_list')
@@ -36,7 +51,7 @@ function injectHTML(list){
       });
     
     array.forEach((item) => {
-        console.log('markerPlace', item);
+        // console.log('markerPlace', item);
 
         const mark = L.marker([parseFloat(item.lat), parseFloat(item.long)])
         mark.bindPopup(JSON.stringify(item.name)).openPopup();
@@ -66,38 +81,44 @@ function injectHTML(list){
     localStorage.setItem('storedData', JSON.stringify(storedList));
     parsedData = storedList;
   
+    currentList = cutRestaurantList(storedList)
+
     filterDataButton.addEventListener('click', (event) => {
       console.log('clicked FilterButton');
       
-      const checkboxes = document.querySelectorAll('input[name="type"]:checked');
-      checkboxes.forEach((radio) => {
-        values.push(radio.value)});
+      const buttons = document.querySelectorAll('input[name="type"]');
+      buttons.forEach((radio) => {
+        if (radio.checked) {
+        values.push(radio.value)}
+      });
 
       const formData = new FormData(mainForm);
       const formProps = Object.fromEntries(formData);
-  
-      console.log(formProps)
-      const newList = filterList(storedList, formProps.build);
-  
-      console.log(newList);
-      injectHTML(newList);
-      markerPlace(newList, carto);
 
       if (values.length > 0){
         console.log(values)
-        const newList = filterList(storedList, formProps.type);
+        const newList = filterList(currentList, formProps.type);
         console.log(newList);
         injectHTML(newList);
         markerPlace(newList, carto);
         values.length = 0;
         console.log(values);
+        buttons.checked = false;
       }
       else{
-        const newList = filterList(storedList, formProps.build);
-        console.log(newList);
-        injectHTML(newList);
-        markerPlace(newList, carto);
+        currentList = cutRestaurantList(storedList)
+        injectHTML(currentList);
+        markerPlace(currentList, carto);
       }
+    })
+
+    textField.addEventListener('input',(event) => {
+      values.length = 0;
+      console.log('input', event.target.value);
+      const newList = filterList(storedList, event.target.value);
+      console.log(newList);
+      injectHTML(newList);
+      markerPlace(newList, carto);
     })
   }
   
