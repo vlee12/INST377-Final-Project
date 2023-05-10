@@ -65,8 +65,10 @@ function injectHTML(list){
     
     const textField = document.querySelector('#build');
     const filterDataButton = document.querySelector('#filter')
+    const refreshDataButton = document.querySelector('#refresh')
     const radio = document.querySelector('input[type=radio]')
-  
+    const buttons = document.querySelectorAll('input[name="type"]');
+    const random = document.querySelector('#random')
     const carto = initMap();
 
     const storedData = localStorage.getItem('storedData');
@@ -74,19 +76,18 @@ function injectHTML(list){
 
     let currentList = []; 
     let values = [];
+    let randomList = [];
 
     const results = await fetch('https://api.umd.io/v1/map/buildings');
 
     const storedList = await results.json();
     localStorage.setItem('storedData', JSON.stringify(storedList));
     parsedData = storedList;
-  
-    currentList = cutBuildingList(storedList)
+
 
     filterDataButton.addEventListener('click', (event) => {
       console.log('clicked FilterButton');
-      
-      const buttons = document.querySelectorAll('input[name="type"]');
+
       buttons.forEach((radio) => {
         if (radio.checked) {
         values.push(radio.value)}
@@ -95,31 +96,69 @@ function injectHTML(list){
       const formData = new FormData(mainForm);
       const formProps = Object.fromEntries(formData);
 
-      if (values.length > 0){
+      if (randomList.length == 15) {
+        if (values.length > 0){
+          // filter random with radio buttons
+          console.log(randomList)
+          const newList = filterList(randomList, formProps.type);
+          if (newList.length == 0) {
+            console.log(newList)
+            injectHTML(randomList)
+            markerPlace(randomList, carto)
+          } else {
+            injectHTML(newList);
+            markerPlace(newList, carto);
+            values.length = 0;
+          }
+        } else{
+          // filter random with input box
+          const newList = filterList(randomList, formProps.build);
+          console.log(newList)
+          if (newList.length == 0) {
+            injectHTML(randomList)
+            markerPlace(randomList, carto)
+          } else {
+            injectHTML(newList);
+            markerPlace(newList, carto);
+          }
+        }
+      } else {
+        // filter storedList (localstorage) with radio buttons
         console.log(values)
-        const newList = filterList(currentList, formProps.type);
-        console.log(newList);
-        injectHTML(newList);
-        markerPlace(newList, carto);
-        values.length = 0;
-        console.log(values);
-        buttons.checked = false;
-      }
-      else{
-        currentList = cutBuildingList(storedList)
-        injectHTML(currentList);
-        markerPlace(currentList, carto);
-      }
-    })
-
+          const newList = filterList(storedList, formProps.type);
+          console.log(newList);
+          injectHTML(newList);
+          markerPlace(newList, carto);
+          values.length = 0;
+        }
+      })
+    
     textField.addEventListener('input',(event) => {
-      values.length = 0;
+      buttons.forEach(radio => {
+        radio.checked = false;
+      });
+      
+      if (randomList == 0) {
       console.log('input', event.target.value);
       const newList = filterList(storedList, event.target.value);
-      console.log(newList);
       injectHTML(newList);
       markerPlace(newList, carto);
+      }
+      })
+
+    random.addEventListener('click', (event) => {
+      randomList.length = 0;
+      currentList = cutRestaurantList(storedList)
+      currentList.forEach(building => {
+        randomList.push(building)
+      })
+      injectHTML(currentList)
+      markerPlace(currentList, carto)
     })
+
+    refreshDataButton.addEventListener('click', (event) => {
+      window.location.reload();
+    });
   }
   
 
