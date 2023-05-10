@@ -24,6 +24,11 @@ header {
   gap: 1.5rem;
 }
 
+h2 {
+  display: flex;
+  margin-top: 0.5rem;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -177,7 +182,7 @@ form label {
   text-decoration: none;
 }
 
-@media only screen and (max-width: 736px){
+@media only screen and (max-width: 736px){  
   .container {
     background-color: rgba(204, 8, 162, 0.65);
     display: flex;
@@ -224,11 +229,6 @@ form label {
     flex: 0 3 auto;
   }
 
-  .footer{
-    position: sticky;
-    bottom: 0;
-  }
-
   form label {
     display: flex;
     font-size: 14px;
@@ -239,5 +239,10 @@ form label {
   .page {
     display: flex;
     flex-direction: column;
+  }
+
+  .footer{
+    position: sticky;
+    bottom: 0;
   }
 }
