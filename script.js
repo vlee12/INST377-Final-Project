@@ -148,6 +148,9 @@ function injectHTML(list){
 
     random.addEventListener('click', (event) => {
       randomList.length = 0;
+      buttons.forEach(radio => {
+        radio.checked = false;
+      });
       currentList = cutBuildingList(storedList)
       currentList.forEach(building => {
         randomList.push(building)
