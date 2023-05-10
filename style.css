@@ -173,7 +173,6 @@ form label {
 }
 
 .footer a:hover {
-  background-color: hsla(0, 0%, 90%, 0.15);
   color: #fff;
   text-decoration: none;
 }
