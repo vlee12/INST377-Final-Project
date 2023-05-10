@@ -148,7 +148,7 @@ function injectHTML(list){
 
     random.addEventListener('click', (event) => {
       randomList.length = 0;
-      currentList = cutRestaurantList(storedList)
+      currentList = cutBuildingList(storedList)
       currentList.forEach(building => {
         randomList.push(building)
       })
